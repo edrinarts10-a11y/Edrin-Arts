@@ -409,6 +409,221 @@
   </div>
 </section>
 
+
+<!-- SALES CHATBOT -->
+<img src="d.jpg"
+     id="chatbot-icon"
+     onclick="toggleChat()" />
+
+<div id="chatbot-box">
+  <div id="chat-header">Bangi</div>
+  <div id="chat-body">
+    <div id="messages"></div>
+  </div>
+</div>
+
+<style>
+#chatbot-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  border: 3px solid #00ff88;
+  box-shadow: 0 0 15px #00ff88, 0 0 30px #00cc66;
+
+  object-fit: cover;
+  transition: 0.3s;
+}
+
+#chatbot-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px #00ff88, 0 0 45px #00cc66;
+}
+
+#chatbot-box {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 280px;
+  background: #0d0d0d;
+  color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: Arial;
+}
+
+#chat-header {
+  background: #00cc66;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  color: black;
+}
+
+#chat-body {
+  padding: 10px;
+}
+
+.msg {
+  margin: 6px 0;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.bot { background: #1a1a1a; }
+.user { background: #00cc66; color: black; text-align: right; }
+
+button {
+  width: 100%;
+  margin-top: 5px;
+  padding: 8px;
+  border: none;
+  background: #00cc66;
+  color: black;
+  border-radius: 6px;
+  cursor: pointer;
+}
+</style>
+
+<script>
+let userName = "";
+let businessType = "";
+
+function toggleChat() {
+  let box = document.getElementById("chatbot-box");
+  box.style.display = box.style.display === "block" ? "none" : "block";
+
+  if (box.style.display === "block" && !userName) {
+    startFlow();
+  }
+}
+
+function msg(text, type="bot") {
+  let div = document.createElement("div");
+  div.className = "msg " + type;
+  div.innerHTML = text;
+  document.getElementById("messages").appendChild(div);
+}
+
+function typing(cb) {
+  let t = document.createElement("div");
+  t.className = "msg bot";
+  t.innerText = "Typing...";
+  document.getElementById("messages").appendChild(t);
+
+  setTimeout(() => {
+    t.remove();
+    cb();
+  }, 1000);
+}
+
+function startFlow() {
+  typing(() => msg(" Do you want your business okufuna ba customers online..."));
+  
+  setTimeout(() => {
+    typing(() => msg("Before we start, what’s your name?"));
+    askName();
+  }, 1200);
+}
+
+function askName() {
+  let input = document.createElement("input");
+  input.placeholder = "Your name...";
+  input.style.width = "100%";
+  input.style.padding = "8px";
+
+  input.onkeypress = function(e) {
+    if (e.key === "Enter") {
+      userName = input.value;
+      msg(userName, "user");
+      input.remove();
+
+      typing(() => msg("Nice to meet you " + userName + " 😄"));
+
+      setTimeout(askBusiness, 1000);
+    }
+  };
+
+  document.getElementById("messages").appendChild(input);
+}
+
+function askBusiness() {
+  typing(() => {
+    msg("What type of business do you have?");
+    addButtons(["Hotel", "Restaurant", "Other"], handleBusiness);
+  });
+}
+
+function handleBusiness(type) {
+  businessType = type;
+  msg(type, "user");
+
+  typing(() => {
+    msg("Great 👍 we’ve helped similar businesses get more bookings online.");
+  });
+
+  setTimeout(askBudget, 1200);
+}
+
+function askBudget() {
+  typing(() => {
+    msg("What’s your budget range?");
+    addButtons(["Basic", "Standard", "Full", "Premium"], handleBudget);
+  });
+}
+
+function handleBudget(level) {
+  msg(level, "user");
+
+  typing(() => {
+    msg("Perfect. I have something that fits your budget.");
+  });
+
+  setTimeout(closeDeal, 1200);
+}
+
+function closeDeal() {
+  typing(() => {
+    msg("🚀 I can build your " + businessType + " website in not more than a week days.");
+  });
+
+  setTimeout(() => {
+    typing(() => {
+      msg("⚠️ I’m currently taking only 2 clients this week.");
+    });
+  }, 1200);
+
+  setTimeout(() => {
+    typing(() => {
+      msg(`
+      👉 Click below to secure your slot:<br><br>
+      <a href="https://wa.me/256761273024" target="_blank">
+      🔥 Chat on WhatsApp Now
+      </a>
+      `);
+    });
+  }, 2400);
+}
+
+function addButtons(options, callback) {
+  options.forEach(opt => {
+    let btn = document.createElement("button");
+    btn.innerText = opt;
+    btn.onclick = () => callback(opt);
+    document.getElementById("messages").appendChild(btn);
+  });
+}
+
+// AUTO TRIGGER MESSAGE
+setTimeout(() => {
+  msg("I'm Banji, an assistant");
+}, 4000);
+</script>
 <footer>
   <div class="footer-copy">© 2026 <span>Edrine Arts</span> · Built in Uganda 🇺🇬</div>
   <div class="footer-links">
